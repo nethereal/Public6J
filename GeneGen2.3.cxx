@@ -13,6 +13,8 @@ const uint16_t chromosomeLength = 256 * geneLength; //bytes total of 1 gene(8byt
 
 const uint64_t bytesInMB = 1048576;
 const int MB_DEFAULT = 1;
+const bool DFYWRITEON = false;
+
 
 // utilfx
 void motp(){
@@ -155,13 +157,14 @@ int main(int argc, char* argv[]) {
 		errOutput(argv);
 		return 0;
 	}
-	if (file_exists(dupefyfilename)) { // arg 2 validation - dupefy-file already exists
-		std::cout << std::endl;
-		std::cout << "Error: Argument 2 already exists as a dupefy-file!" << std::endl;
-		errOutput(argv);
-		return 0;
-	}	
-
+	if (DFYWRITEON) { 
+		if (file_exists(dupefyfilename)) { // arg 2 validation - dupefy-file already exists
+			std::cout << std::endl;
+			std::cout << "Error: Argument 2 already exists as a dupefy-file!" << std::endl;
+			errOutput(argv);
+			return 0;
+		}	
+	}
 	// Verify & reserve free memory
 	std::cout << "Reserving memory for objects..." << std::endl;
 	genomeLength = bytesInMB * arg3; // genomeLength was set to base, now X arg
@@ -201,6 +204,10 @@ int main(int argc, char* argv[]) {
 	// Verify & reserve disk space
 	std::cout << "Reserving disk space..." << std::endl;
 	uint8_t preseedFile; // Create empty file of appropriate size according to optional argv[3]
+	uint64_t tmparg3;
+	if (argc == 3) { tmparg3 = 1; }
+	else if (argc == 4) { tmparg3 = arg3; }
+	preseedFile = CreateEmptyKeyFile(arg2,false,tmparg3); 
 	uint8_t preseedDfy1;
 	uint8_t preseedDfy2;
 	uint8_t preseedDfy3;
@@ -218,18 +225,16 @@ int main(int argc, char* argv[]) {
 	std::string dfyFN6 = dfybase + "-dfy6";
 	std::string dfyFN7 = dfybase + "-dfy7";
 	std::string dfyFN8 = dfybase + "-dfy8";
-	uint64_t tmparg3;
-	if (argc == 3) { tmparg3 = 1; }
-	else if (argc == 4) { tmparg3 = arg3; }
-	preseedFile = CreateEmptyKeyFile(arg2,false,tmparg3); 
-	preseedDfy1 = CreateEmptyKeyFile((char *)dfyFN1.c_str(),true,tmparg3); 	
-	preseedDfy2 = CreateEmptyKeyFile((char *)dfyFN2.c_str(),true,tmparg3); 	
-	preseedDfy3 = CreateEmptyKeyFile((char *)dfyFN3.c_str(),true,tmparg3); 	
-	preseedDfy4 = CreateEmptyKeyFile((char *)dfyFN4.c_str(),true,tmparg3); 	
-	preseedDfy5 = CreateEmptyKeyFile((char *)dfyFN5.c_str(),true,tmparg3); 	
-	preseedDfy6 = CreateEmptyKeyFile((char *)dfyFN6.c_str(),true,tmparg3); 	
-	preseedDfy7 = CreateEmptyKeyFile((char *)dfyFN7.c_str(),true,tmparg3); 	
-	preseedDfy8 = CreateEmptyKeyFile((char *)dfyFN8.c_str(),true,tmparg3); 		
+	if (DFYWRITEON) {
+		preseedDfy1 = CreateEmptyKeyFile((char *)dfyFN1.c_str(),true,tmparg3);
+		preseedDfy2 = CreateEmptyKeyFile((char *)dfyFN2.c_str(),true,tmparg3); 	
+		preseedDfy3 = CreateEmptyKeyFile((char *)dfyFN3.c_str(),true,tmparg3); 	
+		preseedDfy4 = CreateEmptyKeyFile((char *)dfyFN4.c_str(),true,tmparg3); 	
+		preseedDfy5 = CreateEmptyKeyFile((char *)dfyFN5.c_str(),true,tmparg3); 	
+		preseedDfy6 = CreateEmptyKeyFile((char *)dfyFN6.c_str(),true,tmparg3); 	
+		preseedDfy7 = CreateEmptyKeyFile((char *)dfyFN7.c_str(),true,tmparg3); 	
+		preseedDfy8 = CreateEmptyKeyFile((char *)dfyFN8.c_str(),true,tmparg3); 	
+	}
 	if (getFilesize(arg2) != genomeLength) { // Validate placeholder file
 		std::cout << std::endl;
 		std::cout << "gF: " << getFilesize(arg2) << std::endl;
@@ -240,86 +245,88 @@ int main(int argc, char* argv[]) {
 		if (delfail) { std::cout << "Error while attempting to delete " << arg2 << std::endl; }
 		return 0;
 	}
-	if (getFilesize(dfyFN1.c_str()) != (genomeLength / 8)) { // Validate dfyFN1 file
-		std::cout << std::endl;
-		std::cout << "gF: " << getFilesize(dfyFN1.c_str()) << std::endl;
-		std::cout << "Error while generating dfy1 file!" << std::endl;
-		errOutput(argv);
-		std::remove(dfyFN1.c_str()); // delete file
-		bool delfail = !std::ifstream(dfyFN1.c_str());
-		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN1 << std::endl; }
-		return 0;
-	}	
-	if (getFilesize(dfyFN2.c_str()) != (genomeLength / 8)) { // Validate dfyFN2 file
-		std::cout << std::endl;
-		std::cout << "gF: " << getFilesize(dfyFN2.c_str()) << std::endl;
-		std::cout << "Error while generating dfyFN2 file!" << std::endl;
-		errOutput(argv);
-		std::remove(dfyFN2.c_str()); // delete file
-		bool delfail = !std::ifstream(dfyFN2.c_str());
-		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN2 << std::endl; }
-		return 0;
-	}	
-	if (getFilesize(dfyFN3.c_str()) != (genomeLength / 8)) { // Validate dfyFN3 file
-		std::cout << std::endl;
-		std::cout << "gF: " << getFilesize(dfyFN3.c_str()) << std::endl;
-		std::cout << "Error while generating dfyFN3 file!" << std::endl;
-		errOutput(argv);
-		std::remove(dfyFN3.c_str()); // delete file
-		bool delfail = !std::ifstream(dfyFN3.c_str());
-		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN3 << std::endl; }
-		return 0;
-	}	
-	if (getFilesize(dfyFN4.c_str()) != (genomeLength / 8)) { // Validate dfyFN4 file
-		std::cout << std::endl;
-		std::cout << "gF: " << getFilesize(dfyFN4.c_str()) << std::endl;
-		std::cout << "Error while generating dfyFN4 file!" << std::endl;
-		errOutput(argv);
-		std::remove(dfyFN4.c_str()); // delete file
-		bool delfail = !std::ifstream(dfyFN4.c_str());
-		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN4 << std::endl; }
-		return 0;
-	}	
-	if (getFilesize(dfyFN5.c_str()) != (genomeLength / 8)) { // Validate dfyFN5 file
-		std::cout << std::endl;
-		std::cout << "gF: " << getFilesize(dfyFN5.c_str()) << std::endl;
-		std::cout << "Error while generating dfyFN5 file!" << std::endl;
-		errOutput(argv);
-		std::remove(dfyFN5.c_str()); // delete file
-		bool delfail = !std::ifstream(dfyFN5.c_str());
-		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN5 << std::endl; }
-		return 0;
-	}	
-	if (getFilesize(dfyFN6.c_str()) != (genomeLength / 8)) { // Validate dfyFN6 file
-		std::cout << std::endl;
-		std::cout << "gF: " << getFilesize(dfyFN6.c_str()) << std::endl;
-		std::cout << "Error while generating dfyFN6 file!" << std::endl;
-		errOutput(argv);
-		std::remove(dfyFN6.c_str()); // delete file
-		bool delfail = !std::ifstream(dfyFN6.c_str());
-		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN6 << std::endl; }
-		return 0;
-	}	
-	if (getFilesize(dfyFN7.c_str()) != (genomeLength / 8)) { // Validate dfyFN7 file
-		std::cout << std::endl;
-		std::cout << "gF: " << getFilesize(dfyFN7.c_str()) << std::endl;
-		std::cout << "Error while generating dfyFN7 file!" << std::endl;
-		errOutput(argv);
-		std::remove(dfyFN7.c_str()); // delete file
-		bool delfail = !std::ifstream(dfyFN7.c_str());
-		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN7 << std::endl; }
-		return 0;
-	}	
-	if (getFilesize(dfyFN8.c_str()) != (genomeLength / 8)) { // Validate dfyFN8 file
-		std::cout << std::endl;
-		std::cout << "gF: " << getFilesize(dfyFN8.c_str()) << std::endl;
-		std::cout << "Error while generating dfyFN8 file!" << std::endl;
-		errOutput(argv);
-		std::remove(dfyFN8.c_str()); // delete file
-		bool delfail = !std::ifstream(dfyFN8.c_str());
-		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN8 << std::endl; }
-		return 0;
-	}	
+	if (DFYWRITEON) {
+		if (getFilesize(dfyFN1.c_str()) != (genomeLength / 8)) { // Validate dfyFN1 file
+			std::cout << std::endl;
+			std::cout << "gF: " << getFilesize(dfyFN1.c_str()) << std::endl;
+			std::cout << "Error while generating dfy1 file!" << std::endl;
+			errOutput(argv);
+			std::remove(dfyFN1.c_str()); // delete file
+			bool delfail = !std::ifstream(dfyFN1.c_str());
+			if (delfail) { std::cout << "Error while attempting to delete " << dfyFN1 << std::endl; }
+			return 0;
+		}	
+		if (getFilesize(dfyFN2.c_str()) != (genomeLength / 8)) { // Validate dfyFN2 file
+			std::cout << std::endl;
+			std::cout << "gF: " << getFilesize(dfyFN2.c_str()) << std::endl;
+			std::cout << "Error while generating dfyFN2 file!" << std::endl;
+			errOutput(argv);
+			std::remove(dfyFN2.c_str()); // delete file
+			bool delfail = !std::ifstream(dfyFN2.c_str());
+			if (delfail) { std::cout << "Error while attempting to delete " << dfyFN2 << std::endl; }
+			return 0;
+		}	
+		if (getFilesize(dfyFN3.c_str()) != (genomeLength / 8)) { // Validate dfyFN3 file
+			std::cout << std::endl;
+			std::cout << "gF: " << getFilesize(dfyFN3.c_str()) << std::endl;
+			std::cout << "Error while generating dfyFN3 file!" << std::endl;
+			errOutput(argv);
+			std::remove(dfyFN3.c_str()); // delete file
+			bool delfail = !std::ifstream(dfyFN3.c_str());
+			if (delfail) { std::cout << "Error while attempting to delete " << dfyFN3 << std::endl; }
+			return 0;
+		}	
+		if (getFilesize(dfyFN4.c_str()) != (genomeLength / 8)) { // Validate dfyFN4 file
+			std::cout << std::endl;
+			std::cout << "gF: " << getFilesize(dfyFN4.c_str()) << std::endl;
+			std::cout << "Error while generating dfyFN4 file!" << std::endl;
+			errOutput(argv);
+			std::remove(dfyFN4.c_str()); // delete file
+			bool delfail = !std::ifstream(dfyFN4.c_str());
+			if (delfail) { std::cout << "Error while attempting to delete " << dfyFN4 << std::endl; }
+			return 0;
+		}	
+		if (getFilesize(dfyFN5.c_str()) != (genomeLength / 8)) { // Validate dfyFN5 file
+			std::cout << std::endl;
+			std::cout << "gF: " << getFilesize(dfyFN5.c_str()) << std::endl;
+			std::cout << "Error while generating dfyFN5 file!" << std::endl;
+			errOutput(argv);
+			std::remove(dfyFN5.c_str()); // delete file
+			bool delfail = !std::ifstream(dfyFN5.c_str());
+			if (delfail) { std::cout << "Error while attempting to delete " << dfyFN5 << std::endl; }
+			return 0;
+		}	
+		if (getFilesize(dfyFN6.c_str()) != (genomeLength / 8)) { // Validate dfyFN6 file
+			std::cout << std::endl;
+			std::cout << "gF: " << getFilesize(dfyFN6.c_str()) << std::endl;
+			std::cout << "Error while generating dfyFN6 file!" << std::endl;
+			errOutput(argv);
+			std::remove(dfyFN6.c_str()); // delete file
+			bool delfail = !std::ifstream(dfyFN6.c_str());
+			if (delfail) { std::cout << "Error while attempting to delete " << dfyFN6 << std::endl; }
+			return 0;
+		}	
+		if (getFilesize(dfyFN7.c_str()) != (genomeLength / 8)) { // Validate dfyFN7 file
+			std::cout << std::endl;
+			std::cout << "gF: " << getFilesize(dfyFN7.c_str()) << std::endl;
+			std::cout << "Error while generating dfyFN7 file!" << std::endl;
+			errOutput(argv);
+			std::remove(dfyFN7.c_str()); // delete file
+			bool delfail = !std::ifstream(dfyFN7.c_str());
+			if (delfail) { std::cout << "Error while attempting to delete " << dfyFN7 << std::endl; }
+			return 0;
+		}	
+		if (getFilesize(dfyFN8.c_str()) != (genomeLength / 8)) { // Validate dfyFN8 file
+			std::cout << std::endl;
+			std::cout << "gF: " << getFilesize(dfyFN8.c_str()) << std::endl;
+			std::cout << "Error while generating dfyFN8 file!" << std::endl;
+			errOutput(argv);
+			std::remove(dfyFN8.c_str()); // delete file
+			bool delfail = !std::ifstream(dfyFN8.c_str());
+			if (delfail) { std::cout << "Error while attempting to delete " << dfyFN8 << std::endl; }
+			return 0;
+		}	
+	}
 	std::cout << "Disk space reserved OK ..." << std::endl;
 	
 	// Create keyfile in memory
@@ -339,7 +346,7 @@ int main(int argc, char* argv[]) {
 		}
 		newGene = genGene(arg1);
 		//validation code start 
-		if(genCnt == 1048560 || genCnt == 1048568) { 
+		/* if(genCnt == 1048560 || genCnt == 1048568) { 
 			newGene[0] = (unsigned char)255;
 			newGene[1] = (unsigned char)255;
 			newGene[2] = (unsigned char)255;
@@ -348,7 +355,7 @@ int main(int argc, char* argv[]) {
 			newGene[5] = (unsigned char)255;
 			newGene[6] = (unsigned char)255;
 			newGene[7] = (unsigned char)255;
-		}
+		} */
 		//validation code end
 		genome[(genCnt + 0)] = genomeVfy1[genCnt / 8] = newGene[0]; 
 		genome[(genCnt + 1)] = genomeVfy2[genCnt / 8] = newGene[1]; 		
@@ -430,33 +437,34 @@ int main(int argc, char* argv[]) {
 	std::cout << "Finished writing key table memory to keyfile OK ..." << std::endl;
 	
 	// Write dupefyles in memory, to file
-	std::cout << "Writing dupefy memory to dfyX files..." << std::endl;
-	outFileOBJ.open(dfyFN1.c_str(), std::ofstream::out | std::ofstream::binary);
-	outFileOBJ.write((char *)genomeVfy1, (genomeLength / 8));
-	outFileOBJ.close();
-	outFileOBJ.open(dfyFN2.c_str(), std::ofstream::out | std::ofstream::binary);
-	outFileOBJ.write((char *)genomeVfy2, (genomeLength / 8));
-	outFileOBJ.close();
-	outFileOBJ.open(dfyFN3.c_str(), std::ofstream::out | std::ofstream::binary);
-	outFileOBJ.write((char *)genomeVfy3, (genomeLength / 8));
-	outFileOBJ.close();
-	outFileOBJ.open(dfyFN4.c_str(), std::ofstream::out | std::ofstream::binary);
-	outFileOBJ.write((char *)genomeVfy4, (genomeLength / 8));
-	outFileOBJ.close();
-	outFileOBJ.open(dfyFN5.c_str(), std::ofstream::out | std::ofstream::binary);
-	outFileOBJ.write((char *)genomeVfy5, (genomeLength / 8));
-	outFileOBJ.close();
-	outFileOBJ.open(dfyFN6.c_str(), std::ofstream::out | std::ofstream::binary);
-	outFileOBJ.write((char *)genomeVfy6, (genomeLength / 8));
-	outFileOBJ.close();
-	outFileOBJ.open(dfyFN7.c_str(), std::ofstream::out | std::ofstream::binary);
-	outFileOBJ.write((char *)genomeVfy7, (genomeLength / 8));
-	outFileOBJ.close();
-	outFileOBJ.open(dfyFN8.c_str(), std::ofstream::out | std::ofstream::binary);
-	outFileOBJ.write((char *)genomeVfy8, (genomeLength / 8));
-	outFileOBJ.close();
-	std::cout << "Finished writing memory to dfyX files OK ..." << std::endl;
-	
+	if (DFYWRITEON) {
+		std::cout << "Writing dupefy memory to dfyX files..." << std::endl;
+		outFileOBJ.open(dfyFN1.c_str(), std::ofstream::out | std::ofstream::binary);
+		outFileOBJ.write((char *)genomeVfy1, (genomeLength / 8));
+		outFileOBJ.close();
+		outFileOBJ.open(dfyFN2.c_str(), std::ofstream::out | std::ofstream::binary);
+		outFileOBJ.write((char *)genomeVfy2, (genomeLength / 8));
+		outFileOBJ.close();
+		outFileOBJ.open(dfyFN3.c_str(), std::ofstream::out | std::ofstream::binary);
+		outFileOBJ.write((char *)genomeVfy3, (genomeLength / 8));
+		outFileOBJ.close();
+		outFileOBJ.open(dfyFN4.c_str(), std::ofstream::out | std::ofstream::binary);
+		outFileOBJ.write((char *)genomeVfy4, (genomeLength / 8));
+		outFileOBJ.close();
+		outFileOBJ.open(dfyFN5.c_str(), std::ofstream::out | std::ofstream::binary);
+		outFileOBJ.write((char *)genomeVfy5, (genomeLength / 8));
+		outFileOBJ.close();
+		outFileOBJ.open(dfyFN6.c_str(), std::ofstream::out | std::ofstream::binary);
+		outFileOBJ.write((char *)genomeVfy6, (genomeLength / 8));
+		outFileOBJ.close();
+		outFileOBJ.open(dfyFN7.c_str(), std::ofstream::out | std::ofstream::binary);
+		outFileOBJ.write((char *)genomeVfy7, (genomeLength / 8));
+		outFileOBJ.close();
+		outFileOBJ.open(dfyFN8.c_str(), std::ofstream::out | std::ofstream::binary);
+		outFileOBJ.write((char *)genomeVfy8, (genomeLength / 8));
+		outFileOBJ.close();
+		std::cout << "Finished writing memory to dfyX files OK ..." << std::endl;
+	}
 	return 0;
 }
 
