@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 	}	
 
 	// Verify & reserve free memory
-	std::cout << "Checking mem..." << std::endl;
+	std::cout << "Reserving memory for objects..." << std::endl;
 	genomeLength = genomeLength * arg3; // genomeLength was set to base, now X arg
 	//std::cout << "gL: " << genomeLength << std::endl;
 	unsigned char * genome;
@@ -157,7 +157,6 @@ int main(int argc, char* argv[]) {
 	unsigned char * genomeVfy6;
 	unsigned char * genomeVfy7;
 	unsigned char * genomeVfy8;
-	
 	try {
 		//std::cout << "try-gL: " << genomeLength << std::endl;
 		genome = new unsigned char[genomeLength];
@@ -181,7 +180,7 @@ int main(int argc, char* argv[]) {
 		errOutput(argv);
 		return 0;
 	}
-	std::cout << "Mem check OK : key byte array reserved in memory" << std::endl;	
+	std::cout << "Memory reservation OK ..." << std::endl;	
 	
 	// Verify & reserve disk space
 	std::cout << "Reserving disk space..." << std::endl;
@@ -194,7 +193,6 @@ int main(int argc, char* argv[]) {
 	uint8_t preseedDfy6;
 	uint8_t preseedDfy7;
 	uint8_t preseedDfy8;
-	
 	std::string dfybase(arg2);
 	std::string dfyFN1 = dfybase + "-dfy1";
 	std::string dfyFN2 = dfybase + "-dfy2";
@@ -204,7 +202,6 @@ int main(int argc, char* argv[]) {
 	std::string dfyFN6 = dfybase + "-dfy6";
 	std::string dfyFN7 = dfybase + "-dfy7";
 	std::string dfyFN8 = dfybase + "-dfy8";
-	
 	uint64_t tmparg3;
 	if (argc == 3) { 
 		tmparg3 = 1;
@@ -222,8 +219,7 @@ int main(int argc, char* argv[]) {
 	preseedDfy5 = CreateEmptyKeyFile((char *)dfyFN5.c_str(),true,tmparg3); 	
 	preseedDfy6 = CreateEmptyKeyFile((char *)dfyFN6.c_str(),true,tmparg3); 	
 	preseedDfy7 = CreateEmptyKeyFile((char *)dfyFN7.c_str(),true,tmparg3); 	
-	preseedDfy8 = CreateEmptyKeyFile((char *)dfyFN8.c_str(),true,tmparg3); 	
-		
+	preseedDfy8 = CreateEmptyKeyFile((char *)dfyFN8.c_str(),true,tmparg3); 		
 	if (getFilesize(arg2) != genomeLength) { // Validate placeholder file
 		std::cout << std::endl;
 		std::cout << "gF: " << getFilesize(arg2) << std::endl;
@@ -314,14 +310,12 @@ int main(int argc, char* argv[]) {
 		if (delfail) { std::cout << "Error while attempting to delete " << dfyFN8 << std::endl; }
 		return 0;
 	}	
-
 	std::cout << "Disk space reserved OK ..." << std::endl;
 	
 	// Create keyfile in memory
 	std::cout << "Creating key & dfy tables in memory..." << std::endl;
 	for (uint64_t genCnt = 0; genCnt < genomeLength; genCnt = genCnt + 8) { // Main memory object creation loop
 		newGene = genGene(arg1);
-
 		genome[(genCnt + 0)] = genomeVfy1[genCnt / 8] = newGene[0]; 
 		genome[(genCnt + 1)] = genomeVfy2[genCnt / 8] = newGene[1]; 		
 		genome[(genCnt + 2)] = genomeVfy3[genCnt / 8] = newGene[2]; 	
@@ -330,14 +324,11 @@ int main(int argc, char* argv[]) {
 		genome[(genCnt + 5)] = genomeVfy6[genCnt / 8] = newGene[5];
 		genome[(genCnt + 6)] = genomeVfy7[genCnt / 8] = newGene[6]; 
 		genome[(genCnt + 7)] = genomeVfy8[genCnt / 8] = newGene[7]; 
-
 		delete newGene;
 	}
-	
 	std::cout << "Finished creating key table in memory OK ..." << std::endl;
 
-
-	// DUPE CHECK HERE
+	//dupefy
 	uint64_t vfytop = (genomeLength / 8);
 	std::cout << "Calculating total dupifys..." << std::endl;
 	uint64_t totalvfys = 0;
@@ -394,40 +385,30 @@ int main(int argc, char* argv[]) {
 	// Write dupefyles in memory, to file
 	std::cout << "Writing dupefy memory to -dfyX files..." << std::endl;
 	std::cout << "Calculated size of each dfy file: " << (genomeLength / 8) << std::endl;
-	
 	outFileOBJ.open(dfyFN1.c_str(), std::ofstream::out | std::ofstream::binary);
 	outFileOBJ.write((char *)genomeVfy1, (genomeLength / 8));
 	outFileOBJ.close();
-
 	outFileOBJ.open(dfyFN2.c_str(), std::ofstream::out | std::ofstream::binary);
 	outFileOBJ.write((char *)genomeVfy2, (genomeLength / 8));
 	outFileOBJ.close();
-
 	outFileOBJ.open(dfyFN3.c_str(), std::ofstream::out | std::ofstream::binary);
 	outFileOBJ.write((char *)genomeVfy3, (genomeLength / 8));
 	outFileOBJ.close();
-
 	outFileOBJ.open(dfyFN4.c_str(), std::ofstream::out | std::ofstream::binary);
 	outFileOBJ.write((char *)genomeVfy4, (genomeLength / 8));
 	outFileOBJ.close();
-
 	outFileOBJ.open(dfyFN5.c_str(), std::ofstream::out | std::ofstream::binary);
 	outFileOBJ.write((char *)genomeVfy5, (genomeLength / 8));
 	outFileOBJ.close();
-
 	outFileOBJ.open(dfyFN6.c_str(), std::ofstream::out | std::ofstream::binary);
 	outFileOBJ.write((char *)genomeVfy6, (genomeLength / 8));
 	outFileOBJ.close();
-
 	outFileOBJ.open(dfyFN7.c_str(), std::ofstream::out | std::ofstream::binary);
 	outFileOBJ.write((char *)genomeVfy7, (genomeLength / 8));
 	outFileOBJ.close();
-
 	outFileOBJ.open(dfyFN8.c_str(), std::ofstream::out | std::ofstream::binary);
 	outFileOBJ.write((char *)genomeVfy8, (genomeLength / 8));
 	outFileOBJ.close();
-
-	
 	std::cout << "Finished writing memory to -dfyX files OK ..." << std::endl;
 	
 	return 0;
