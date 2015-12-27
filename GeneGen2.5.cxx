@@ -6,7 +6,7 @@
 #include <ctime>
 
 
-const std::string strVersion = "2.4";
+const std::string strVersion = "2.5";
 const std::string strProgram = "GeneGen keyfile generator for ..6j..";
 const std::string strAuthor = "Nethereal";
 const std::string strDate = "27 Dec 15'";
@@ -362,25 +362,13 @@ int main(int argc, char* argv[]) {
 			if (curPc < 10) { pad1 = "  "; }
 			else { pad1 = " "; }
 			timerduration1 = ( std::clock() - timerstart1 ) / (double) CLOCKS_PER_SEC;
-			
-			// current perc / timeelapsed = perc/time
-			timeRem1 = (double)(((pcSteps - pElem) / (timerduration1 / pElem)) / pcSteps) * 0.01;
-			std::cout << pad1.c_str() << std::fixed << std::setprecision(2) << curPc << "% - Time elapsed: " << (int)timerduration1 << "s    Remaining(est): " << timeRem1 << "s          " << "\r" << std::flush;
+			if ((int)timerduration1 >= 10) { timeRem1 = ((double)pcSteps - (double)pElem) / (double)((double)pElem / (int)timerduration1); }
+			std::cout << pad1.c_str() << std::fixed << std::setprecision(2) << curPc << "% - Time elapsed: " << (int)timerduration1 << "s";
+			if ((int)timerduration1 >= 10) { std::cout << "    Remaining(est): " << std::fixed << std::setprecision(2) << (int)timeRem1 << "s          " << "\r" << std::flush; }
+			else { std::cout << "\r" << std::flush; }
 			pElem++;
 		}
 		newGene = genGene(arg1);
-		//validation code start 
-		/* if(genCnt == 1048560 || genCnt == 1048568) { 
-			newGene[0] = (unsigned char)255;
-			newGene[1] = (unsigned char)255;
-			newGene[2] = (unsigned char)255;
-			newGene[3] = (unsigned char)255;
-			newGene[4] = (unsigned char)255;
-			newGene[5] = (unsigned char)255;
-			newGene[6] = (unsigned char)255;
-			newGene[7] = (unsigned char)255;
-		} */
-		//validation code end
 		genome[(genCnt + 0)] = genomeVfy1[genCnt / 8] = newGene[0]; 
 		genome[(genCnt + 1)] = genomeVfy2[genCnt / 8] = newGene[1]; 		
 		genome[(genCnt + 2)] = genomeVfy3[genCnt / 8] = newGene[2]; 	
@@ -418,10 +406,10 @@ int main(int argc, char* argv[]) {
 			if (cPc < 10) { pad2 = "  "; }
 			else { pad2 = " "; }
 			timerduration2 = ( std::clock() - timerstart2 ) / (double) CLOCKS_PER_SEC;
-			
-			timeRem2 = (double)(((percSteps - percElem) / (timerduration2 / percElem)) / percSteps) * 0.01;		
-			
-			std::cout << pad2.c_str() << std::fixed << std::setprecision(2) << cPc << "% - Time elapsed: " << (int)timerduration2 << "s    Remaining: " << timeRem2 << "s          " << "\r" << std::flush;		
+			if ((int)timerduration2 >= 10) { timeRem2 = (((double)percSteps - (double)percElem) / percSteps) * ((double)percElem / (int)timerduration2); }
+			std::cout << pad2.c_str() << std::fixed << std::setprecision(2) << cPc << "% - Time elapsed: " << (int)timerduration2 << "s";
+			if ((int)timerduration2 >= 10) { std::cout << "    Remaining(est): " << std::fixed << std::setprecision(2) << (int)timeRem2 << "s          " << "\r" << std::flush; }
+			else { std::cout << "\r" << std::flush; }
 			percElem++;
 		}
 		for (uint64_t lvl1b = (lvl1a + 1); lvl1b < vfytop; lvl1b++) {
@@ -456,12 +444,8 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	std::cout << "100.00%" << std::endl;
-	if (matches) {
-		std::cout << "Dupify finished with warnings! Matches were found!" << std::endl;
-	}
-	else {
-		std::cout << "Dupifying key table in memory OK ..." << std::endl;
-	}
+	if (matches) { std::cout << "Dupify finished with warnings! Matches were found!" << std::endl; }
+	else { std::cout << "Dupifying key table in memory OK ..." << std::endl; }
 
 	// Write keyfile in memory, to file
 	std::cout << "Writing key table memory to file..." << std::endl;
