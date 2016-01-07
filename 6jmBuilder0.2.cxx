@@ -107,6 +107,23 @@ int main(int argc, char **argv)
 		std::cout << (uint)loadGene[iz] << " ";
 	}
 	std::cout << std::endl;
+	
+	
+	//uint64_t icurr = 0;
+	uint64_t geneval = 0;
+	std::string outhex = "";
+	for (int ichar = 0; ichar < GENESETLEN; ichar++) {
+		do {
+			loadGene = getGeneFromArray(genome, (ichar * BYTESPERGENE));
+			for (int ic = 0; ic < BYTESPERGENE; ic++) {
+				
+			}
+			geneval = (uint64_t)loadGene;
+		} while (geneval == UINT_MAX || geneval == 0);
+		if(ichar <= 127) { std::cout << "Value for char " << ichar << "[here]"; }
+		else { std::cout << "Value for char " << ichar << "[ext" << (ichar-127) << "]"; }
+		std::cout << ichar << " is: " << (unsigned) geneval << std::endl;
+	}
 	return 0;
 }
 
