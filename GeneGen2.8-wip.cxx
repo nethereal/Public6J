@@ -185,6 +185,7 @@ int main(int argc, char* argv[]) {
 	genomeLength = bytesInMB * arg3; // genomeLength was set to base, now X arg
 	//std::cout << "gL: " << genomeLength << std::endl;
 	unsigned char * genome;
+	unsigned char * tribble;
 	unsigned char * genomeVfy1;
 	unsigned char * genomeVfy2;
 	unsigned char * genomeVfy3;
@@ -195,6 +196,7 @@ int main(int argc, char* argv[]) {
 	unsigned char * genomeVfy8;
 	try {
 		genome = new unsigned char[genomeLength];
+		tribble = new unsigned char[genomeLength];
 		genomeVfy1 = new unsigned char[(genomeLength / geneLength)];
 		genomeVfy2 = new unsigned char[(genomeLength / geneLength)];
 		genomeVfy3 = new unsigned char[(genomeLength / geneLength)];
@@ -450,16 +452,31 @@ int main(int argc, char* argv[]) {
 	std::cout << "100.00%" << std::endl;
 	if (matches) { std::cout << "Dupify finished with warnings! Matches were found!" << std::endl; }
 	else { std::cout << "Dupifying key table in memory OK ..." << std::endl; }
+
+
+
 	
-	
-	// Trippler function
-	// Trippler will act as further obfuscation to deter reverse engineering of the randomization process.
+	// Tribbler function
+	// Tribbler  will act as further obfuscation to deter reverse engineering of the randomization process.
 	// It will do so by randomly relocating Genes (char[8]) within the Genome
 	
 	
 	
+	// genome[]
+	std::cout << " " << std::endl;
+	std::cout << "Tribble start.." << std::endl;
+	
+	//first, make sure we have a new genome array to store the data
+	//next, how do we keep track of the randoms?
 	
 	
+	
+	std::cout << "...Tribble end." << std::endl;
+	std::cout << " " std::endl; 
+
+
+
+
 
 	// Write keyfile in memory, to file
 	std::cout << "Writing key table memory to file..." << std::endl;
