@@ -450,6 +450,16 @@ int main(int argc, char* argv[]) {
 	std::cout << "100.00%" << std::endl;
 	if (matches) { std::cout << "Dupify finished with warnings! Matches were found!" << std::endl; }
 	else { std::cout << "Dupifying key table in memory OK ..." << std::endl; }
+	
+	
+	// Trippler function
+	// Trippler will act as further obfuscation to deter reverse engineering of the randomization process.
+	// It will do so by randomly relocating Genes (char[8]) within the Genome
+	
+	
+	
+	
+	
 
 	// Write keyfile in memory, to file
 	std::cout << "Writing key table memory to file..." << std::endl;
