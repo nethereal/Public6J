@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iomanip>
 #include <ctime>
+#include <vector>
 
 
 const std::string strVersion = "2.8 - wip - Trippler edition";
@@ -414,7 +415,7 @@ int main(int argc, char* argv[]) {
 			timerduration2 = ( std::clock() - timerstart2 ) / (double) CLOCKS_PER_SEC;
 			if ((int)timerduration2 >= 10) { timeRem2 = (((int)timerduration2 / cPc) * 100) - (int)timerduration2; }
 			std::cout << pad2.c_str() << std::fixed << std::setprecision(2) << cPc << "% - Time elapsed: " << (int)timerduration2 << "s";
-			if ((int)timerduration2 >= 10) { std::cout << "    Remaining(est): " << std::fixed << std::setprecision(2) << timeRem2 << " " << cPc << "s          " << "\r" << std::flush; }
+			if ((int)timerduration2 >= 10) { std::cout << "    Remaining(est): " << std::fixed << std::setprecision(2) << timeRem2 << " " << "s          " << "\r" << std::flush; }
 			else { std::cout << "\r" << std::flush; }
 			percElem++;
 		}
@@ -463,19 +464,30 @@ int main(int argc, char* argv[]) {
 	
 	
 	// genome[]
-	std::cout << " " << std::endl;
+	//std::cout << " " << std::endl;
 	std::cout << "Tribble start.." << std::endl;
 	
-	//first, make sure we have a new genome array to store the data
-	//next, how do we keep track of the randoms?
+	//first, lets try to convert the current genome array to a vector
+	std::vector<unsigned char> vecGenome;
+	std::cout << "  GenomeLength: " << genomeLength << std::endl;
+	vecGenome.resize(genomeLength, UCHAR_MAX);
 	
-	
+	std::cout << "  Vector created and space reserved: " << vecGenome.size() << std::endl;
+	for (uint64_t i=0; i<genomeLength; ++i) vecGenome.at(i) = genome[i];
+
+	//we now have a vector of the genome. Can be used to construct a randomized logical genomevector
+
+	//std::cout << "random check byte 1: " << (uint) vecGenome.at(genomeLength - 8) << std::endl;
+	//std::cout << "random check byte 2: " << (uint) vecGenome.at(genomeLength - 7) << std::endl;
+	//std::cout << "random check byte 3: " << (uint) vecGenome.at(genomeLength - 6) << std::endl;
+	//std::cout << "random check byte 4: " << (uint) vecGenome.at(genomeLength - 5) << std::endl;
+	//std::cout << "random check byte 5: " << (uint) vecGenome.at(genomeLength - 4) << std::endl;
+	//std::cout << "random check byte 6: " << (uint) vecGenome.at(genomeLength - 3) << std::endl;
+	//std::cout << "random check byte 7: " << (uint) vecGenome.at(genomeLength - 2) << std::endl;
+	//std::cout << "random check byte 8: " << (uint) vecGenome.at(genomeLength - 1) << std::endl;
 	
 	std::cout << "...Tribble end." << std::endl;
-	std::cout << " " std::endl; 
-
-
-
+	//std::cout << " " std::endl; 
 
 
 	// Write keyfile in memory, to file
