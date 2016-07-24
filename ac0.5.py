@@ -7,6 +7,20 @@ import random
 
 incr = 8 * 256
 
+def startup(args):
+	if len(args) != 3:
+		print "ERROR: Wrong number of arguments:",len(args)
+		usage()
+		return False
+
+def usage():
+	print " "
+	print " $ python script.py <keyfile.key> <inputfile>"
+	print " "
+	print " <keyfile.key> = must be 6j formatted keyfile."
+	print " <inputfile> = ASCII character input file, max 256 chars"
+	print " "
+
 def get_bytes_from_file(filename):  
     return open(filename, "rb").read()  
 
@@ -36,6 +50,9 @@ def padMsg(encmsg,genome,ptmsg):
 	return paddedmsg
 
 def main(args):
+	if startup(args) == False:
+		print "Error on startup, quitting.."
+		return
 	bytesPerGene = 8
 	genesPerRow = 256
 	retdata = get_bytes_from_file(args[1])
@@ -45,7 +62,7 @@ def main(args):
 	print "keyfile bytes:",len(genome)
 	print "genome length:",((len(genome) / bytesPerGene) / genesPerRow)
 	print "Genome loaded"
-	ptmsg = "The secret message haiku"
+	ptmsg = open(args[2], "r").read()
 	encmsg = bytearray()
 	for ch in ptmsg:
 		chartoget = ord(ch)
