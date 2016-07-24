@@ -73,7 +73,7 @@ def getKeyfileData(filename):
 def right(s, amount):
 	return s[-amount:]
 def left(s,amount):
-	return s[amount]
+	return s[:amount]
 
 def main(args):
 	if len(args) != 2:
@@ -117,25 +117,36 @@ def main(args):
 	
 	encryptedMsg = array('i')
 	
+	longstring = ""
+	
 	for ltrGene in chrArray:
-		tmpGene = ltrGene
-		while True:
-			tGene = data.itemgetter(slice(tmpGene, tmpGene)+8)
-			if tGene[tmpGene] == 0 and tGene[tmpGene+1] == 0 and tGene[tmpGene+2] == 0 and tGene[tmpGene+3] == 0 and tGene[tmpGene+4] == 0 and tGene[tmpGene+5] == 0 and tGene[tmpGene+6] == 0 and tGene[tmpGene+7] == 0:
-				tGene = tGene + incr
-				continue
-			if tGene[tmpGene] != 0 and tGene[tmpGene+1] != 0 and tGene[tmpGene+2] != 0 and tGene[tmpGene+3] != 0 and tGene[tmpGene+4] != 0 and tGene[tmpGene+5] != 0 and tGene[tmpGene+6] != 0 and tGene[tmpGene+7] != 0:
-				encryptedMsg.append(tGene[tmpGene])
-				encryptedMsg.append(tGene[tmpGene+1])
-				encryptedMsg.append(tGene[tmpGene+2])
-				encryptedMsg.append(tGene[tmpGene+3])
-				encryptedMsg.append(tGene[tmpGene+4])
-				encryptedMsg.append(tGene[tmpGene+5])
-				encryptedMsg.append(tGene[tmpGene+6])
-				encryptedMsg.append(tGene[tmpGene+7])
-				break
+		longstring = longstring + ltrGene + ","
+		#curLtr = ltrGene
+		
+		#while True:
+		#	tGene = data.itemgetter(slice(tmpGene, tmpGene)+8)
+		#	if tGene[tmpGene] == 0 and tGene[tmpGene+1] == 0 and tGene[tmpGene+2] == 0 and tGene[tmpGene+3] == 0 and tGene[tmpGene+4] == 0 and tGene[tmpGene+5] == 0 and tGene[tmpGene+6] == 0 and tGene[tmpGene+7] == 0:
+		#		tGene = tGene + incr
+		#		continue
+		#	if tGene[tmpGene] != 0 and tGene[tmpGene+1] != 0 and tGene[tmpGene+2] != 0 and tGene[tmpGene+3] != 0 and tGene[tmpGene+4] != 0 and tGene[tmpGene+5] != 0 and tGene[tmpGene+6] != 0 and tGene[tmpGene+7] != 0:
+		#		encryptedMsg.append(tGene[tmpGene])
+		#		encryptedMsg.append(tGene[tmpGene+1])
+		#		encryptedMsg.append(tGene[tmpGene+2])
+		#		encryptedMsg.append(tGene[tmpGene+3])
+		#		encryptedMsg.append(tGene[tmpGene+4])
+		#		encryptedMsg.append(tGene[tmpGene+5])
+		#		encryptedMsg.append(tGene[tmpGene+6])
+		#		encryptedMsg.append(tGene[tmpGene+7])
+		#		break
 	print len(encryptedMsg)
-
+	longstring = left(longstring,len(longstring)-1)
+	print longstring 
+	
+	for chrToEncrypt in chrArray:
+		#get gene from data
+		gene = data[chrToEncrypt-(chrToEncrypt+8)]
+		print "::",gene
+	
 	#os.urandom()
 	#
 
