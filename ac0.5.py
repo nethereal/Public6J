@@ -3,6 +3,8 @@
 #  test2jcl.py
 #  Copyright 2016 doon <doon@xulu.my.domain>
 
+import random
+
 incr = 8 * 256
 
 def get_bytes_from_file(filename):  
@@ -26,7 +28,7 @@ def getGene(genome,ascval):
 			genome[curr+7] = 255
 			return tmplocalgene
 			
-def padMsg(encmsg,genome):
+def padMsg(encmsg,genome,ptmsg):
 	paddedmsg = encmsg
 	for i in range(0,(255-len(ptmsg)),1):
 		ascchar = random.randint(128,255)
@@ -39,15 +41,12 @@ def main(args):
 	retdata = get_bytes_from_file(args[1])
 	genome = bytearray(retdata)
 	tmpGene = bytearray(8)
-	
 	print "keyfile data: ",type(genome)
 	print "keyfile bytes:",len(genome)
 	print "genome length:",((len(genome) / bytesPerGene) / genesPerRow)
 	print "Genome loaded"
 	ptmsg = "The secret message haiku"
-
 	encmsg = bytearray()
-	
 	for ch in ptmsg:
 		chartoget = ord(ch)
 		curGene = getGene(genome,chartoget)
@@ -55,9 +54,14 @@ def main(args):
 		print str(chartoget),":  ",curGene[0],",",curGene[1],",",curGene[2],",",curGene[3],",",curGene[4],",",curGene[5],",",curGene[6],",",curGene[7]
 	print "nmlmsg len: ",len(ptmsg)
 	print "encmsg len: ",len(encmsg)
-	
-	
-	
+	rdyMsg = padMsg(encmsg,genome,ptmsg)
+	print "rdyMsg len: ",len(rdyMsg)
+	print "bakchk len: ",(len(rdyMsg)/8)
+	print "*above number should be 255"
+	print "Writing msg file..."
+	newMsgFile = open("encmsg.6jm","wb")
+	newMsgFile.write(rdyMsg)
+	print "Writing keyfile modifications.."
 	newFile = open(args[1],"wb")
 	newFile.write(genome)
 
