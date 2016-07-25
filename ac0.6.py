@@ -44,7 +44,7 @@ def getGene(genome,ascval):
 			
 def padMsg(encmsg,genome,ptmsg):
 	paddedmsg = encmsg
-	for i in range(0,(255-len(ptmsg)),1):
+	for i in range(0,(256-len(ptmsg)),1):
 		ascchar = random.randint(128,255)
 		paddedmsg = paddedmsg + getGene(genome,ascchar)
 	return paddedmsg
@@ -74,7 +74,7 @@ def main(args):
 	rdyMsg = padMsg(encmsg,genome,ptmsg)
 	print "rdyMsg len: ",len(rdyMsg)
 	print "bakchk len: ",(len(rdyMsg)/8)
-	print "*above number should be 255"
+	print "*above number should be 256"
 	print "Writing msg file..."
 	newMsgFile = open("encmsg.6jm","wb")
 	newMsgFile.write(rdyMsg)
