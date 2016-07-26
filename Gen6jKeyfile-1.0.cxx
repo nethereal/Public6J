@@ -164,7 +164,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	std::string strarg2(arg2,strlen(arg2));
-	strarg2 += ".key";
+	strarg2 += ".6jk";
 	std::string dupefyfilename;
 	dupefyfilename.append("dupefy-");
 	dupefyfilename.append(strarg2);
@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
 	else if (argc == 4) { tmparg3 = arg3; }
 	// std::string tmparg2(arg2,strlen(arg2));
 	char* arg22 = arg2;
-	strcat (arg22, ".key");
+	strcat (arg22, ".6jk");
 	// preseedFile = CreateEmptyKeyFile(arg2,false,tmparg3); 
 	preseedFile = CreateEmptyKeyFile(arg22,false,tmparg3); 
 	
@@ -476,7 +476,7 @@ int main(int argc, char* argv[]) {
 	
 	// genome[]
 	//std::cout << " " << std::endl;
-	std::cout << "Tribble start.." << std::endl;
+	//std::cout << "Tribble start.." << std::endl;
 	
 	// this code has been relocated to memory reservation section
 	//std::vector<unsigned char> vecGenome;
@@ -484,12 +484,12 @@ int main(int argc, char* argv[]) {
 	//vecGenome.resize(genomeLength, UCHAR_MAX);
 	
 	//first, lets try to convert the current genome array to a vector
-	std::cout << "  vecGenome populating.. " << vecGenome.size() << std::endl;
-	for (uint64_t i=0; i<genomeLength; ++i) {
-		vecGenome.at(i) = genome[i];
-	}
+	//std::cout << "  vecGenome populating.. " << vecGenome.size() << std::endl;
+	//for (uint64_t i=0; i<genomeLength; ++i) {
+	//	vecGenome.at(i) = genome[i];
+	//}
 
-	std::cout << "  beginning random process.." << std::endl;
+	//std::cout << "  beginning random process.." << std::endl;
 	//vecPostrandom
 	
 	///
@@ -515,7 +515,7 @@ int main(int argc, char* argv[]) {
 	//std::cout << "random check byte 7: " << (uint) vecGenome.at(genomeLength - 2) << std::endl;
 	//std::cout << "random check byte 8: " << (uint) vecGenome.at(genomeLength - 1) << std::endl;
 	
-	std::cout << "...Tribble end." << std::endl;
+	//std::cout << "...Tribble end." << std::endl;
 	//std::cout << " " std::endl; 
 
 
