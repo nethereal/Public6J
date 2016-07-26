@@ -164,7 +164,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	std::string strarg2(arg2,strlen(arg2));
-	strarg2 += ".key"
+	strarg2 += ".key";
 	std::string dupefyfilename;
 	dupefyfilename.append("dupefy-");
 	dupefyfilename.append(strarg2);
@@ -231,8 +231,12 @@ int main(int argc, char* argv[]) {
 	uint64_t tmparg3;
 	if (argc == 3) { tmparg3 = 1; }
 	else if (argc == 4) { tmparg3 = arg3; }
-	// must add .key to arg2
-	preseedFile = CreateEmptyKeyFile(arg2,false,tmparg3); 
+	// std::string tmparg2(arg2,strlen(arg2));
+	char* arg22 = arg2;
+	strcat (arg22, ".key");
+	// preseedFile = CreateEmptyKeyFile(arg2,false,tmparg3); 
+	preseedFile = CreateEmptyKeyFile(arg22,false,tmparg3); 
+	
 	uint8_t preseedDfy1;
 	uint8_t preseedDfy2;
 	uint8_t preseedDfy3;
