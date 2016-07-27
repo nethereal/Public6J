@@ -62,6 +62,9 @@ def main(args):
 		if ord(cr) >= 128 or ord(cr) < 0:
 			print "ERROR in input file - non ASCII char detected - quitting"
 			return
+	if len(ptmsg) > 128:
+		print "ERROR in input file - more than 128 characters: ",len(ptmsg)
+		return
 	encmsg = bytearray()
 	for ch in ptmsg:
 		chartoget = ord(ch)
