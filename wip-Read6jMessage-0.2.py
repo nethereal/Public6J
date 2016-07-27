@@ -78,9 +78,27 @@ def getGene(genome,ascval,readonly=True):
 
 
 
-def getAsciiFromGene(gene,keyArray):
-
-	return ord(0)
+def getCharFromGene(genome, gene):
+	currentGenes = bytearray(incr)
+	for i in range(0,256):
+		# For each Char index (0-255), get next avail gene
+		curGene = getGene(genome,i)
+		if curGene == False:
+			print "ERROR: keyfile expired! Quitting..."
+			return
+		currentGenes[(i*8)] = curGene[0]
+		currentGenes[(i*8)+1] = curGene[1]
+		currentGenes[(i*8)+2] = curGene[2]
+		currentGenes[(i*8)+3] = curGene[3]
+		currentGenes[(i*8)+4] = curGene[4]
+		currentGenes[(i*8)+5] = curGene[5]
+		currentGenes[(i*8)+6] = curGene[6]
+		currentGenes[(i*8)+7] = curGene[7]
+	
+	for i in range(0,256):
+		if currentGenes[(i*8)] == gene[0] and currentGenes[(i*8)+1] == gene[1] and currentGenes[(i*8)+2] == gene[2] and currentGenes[(i*8)+3] == gene[3] and currentGenes[(i*8)+4] == gene[4] and currentGenes[(i*8)+5] == gene[5] and currentGenes[(i*8)+6] == gene[6] and currentGenes[(i*8)+7] == gene[7]:
+			
+			return i
 	
 
 def main(args):
@@ -92,11 +110,10 @@ def main(args):
 	msgbytes = bytearray(get_bytes_from_file(args[2]))
 	#genome = bytearray(retdata)
 	print "length of keyfile: ",len(msgbytes)
-	print "Genes of message: "
 	curMsgChar = bytearray(8)
 	for i in range(0,256):
 		#Following line can be used with gHex to verify bytes in msg
-		#print str(i)," ",str(msgbytes[(i*8)]),str(msgbytes[(i*8)+1]),str(msgbytes[(i*8)+2]),str(msgbytes[(i*8)+3]),str(msgbytes[(i*8)+4]),str(msgbytes[(i*8)+5]),str(msgbytes[(i*8)+6]),str(msgbytes[(i*8)+7])
+		print "Pos:",str(i)," ",str(msgbytes[(i*8)]),str(msgbytes[(i*8)+1]),str(msgbytes[(i*8)+2]),str(msgbytes[(i*8)+3]),str(msgbytes[(i*8)+4]),str(msgbytes[(i*8)+5]),str(msgbytes[(i*8)+6]),str(msgbytes[(i*8)+7])
 		curMsgChar[0] = msgbytes[(i*8)]
 		curMsgChar[1] = msgbytes[(i*8)+1]
 		curMsgChar[2] = msgbytes[(i*8)+2]
@@ -105,9 +122,12 @@ def main(args):
 		curMsgChar[5] = msgbytes[(i*8)+5]
 		curMsgChar[6] = msgbytes[(i*8)+6]
 		curMsgChar[7] = msgbytes[(i*8)+7]
+		
+		print str(getCharFromGene(keybytes,curMsgChar))
+		
 		#Following line can be used with gHex to verify bytes in msg		
 		#print str(i)," ",str(curMsgChar[0]),str(curMsgChar[1]),str(curMsgChar[2]),str(curMsgChar[3]),str(curMsgChar[4]),str(curMsgChar[5]),str(curMsgChar[6]),str(curMsgChar[7])
-	
+		
 	#Now have to lookup curMsgChar sequence in a 'buffer' array which holds all the next avail 64bits for each char from keyfile
 	
 	
